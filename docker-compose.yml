@@ -3,9 +3,9 @@ services:
     image: postgres:15
     restart: always
     environment:
-      - POSTGRES_USER=n8n_user
-      - POSTGRES_PASSWORD=Alex_197754
-      - POSTGRES_DB=n8n_db
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
     command: ["postgres", "-c", "checkpoint_timeout=10min"]
     volumes:
       - postgres_data:/var/lib/postgresql/data
