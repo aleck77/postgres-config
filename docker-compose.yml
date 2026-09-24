@@ -1,18 +1,37 @@
 services:
   postgres:
-    image: postgres:15
+    image: postgres:17.11
     restart: always
+
     environment:
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - POSTGRES_DB=${DB_NAME}
-    command: ["postgres", "-c", "checkpoint_timeout=10min"]
+      POSTGRES_USER: n8n_user
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: n8n_db
+
+    command:
+      - postgres
+      - -c
+      - checkpoint_timeout=10min
+
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres17_data:/var/lib/postgresql/data
+
     networks:
       - n8n_default
+
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U n8n_user -d n8n_db
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
 volumes:
-  postgres_data:
+  postgres17_data:
+    external: true
+
 networks:
   n8n_default:
     external: true
